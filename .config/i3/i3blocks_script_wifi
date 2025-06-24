@@ -1,0 +1,10 @@
+#!/bin/bash
+
+interface=$(ip route | awk '/default/ {print $5}')
+essid=$(iwgetid -r)
+
+if [ -n "$essid" ]; then
+    echo "$essid"
+else
+    echo "no-wifi"
+fi

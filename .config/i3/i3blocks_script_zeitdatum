@@ -1,0 +1,6 @@
+#!/bin/bash
+
+time=$(date '+%H:%M')
+date=$(date '+%a %d. %b')
+
+echo " $date  $time"

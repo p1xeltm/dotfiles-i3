@@ -1,0 +1,142 @@
+#================================================================================================================
+# i3 config file (tm)
+#================================================================================================================
+
+for_window [class=".*"] layout tabbed
+floating_modifier $win
+
+set $mod Mod1
+set $win Mod4
+font pango:DejaVu Sans Bold 11
+
+gaps inner 7
+gaps outer 7
+client.focused          #2f343f #772852 #ffffff #ed15d4 #2f343f
+client.unfocused        #772852 #2f343f #787878 #ed15d4 #2f343f
+
+bar {
+    status_command i3blocks -c ~/.config/i3/i3blocks.config
+    strip_workspace_numbers yes
+    font pango:FiraCode Nerd Font 13
+    tray_output primary
+    position top
+    colors {
+        background #2f343f
+        statusline #d6d6d6
+        separator  #777777
+        focused_workspace  #cc575d #cc575d #ffffff
+    }
+}
+
+bindsym $mod+space exec --no-startup-id rofi -show drun
+bindsym $mod+Tab exec --no-startup-id ~/.config/rofi/rofi_script_alttab.sh
+bindsym $mod+Delete exec --no-startup-id ~/.config/rofi/rofi_script_logout.sh
+
+exec --no-startup-id pamixer --set-volume 31
+bindsym XF86AudioRaiseVolume exec --no-startup-id pamixer -i 5 && pkill -RTMIN+10 i3blocks
+bindsym XF86AudioLowerVolume exec --no-startup-id pamixer -d 5 && pkill -RTMIN+10 i3blocks
+
+bindsym $mod+numbersign exec --no-startup-id lxterminal
+bindsym $mod+e exec --no-startup-id thunar
+
+bindsym $win+$mod+Right workspace next
+bindsym $win+$mod+Left workspace prev
+bindsym $win+Left focus left
+bindsym $win+Right focus right
+bindsym $mod+q kill
+bindsym $mod+1 workspace $ws1
+
+
+set $ws1 "1_    "
+set $ws2 "2_    "
+set $ws3 "3_    "
+set $ws7 "7_    "
+
+exec_always --no-startup-id i3-msg "workspace 1_    ; workspace next_on_output"
+
+assign [class="firefox"] $ws1
+for_window [class="firefox"] move to workspace $ws1, layout tabbed, focus
+assign [class="Brave-browser"] $ws1
+for_window [class="Brave-browser"] move to workspace $ws1, layout tabbed, focus
+
+assign [class="Thunar"] $ws2
+for_window [class="Thunar"] floating enable, focus, move position 70px 70px
+
+assign [class="Mousepad"] $ws3
+for_window [class="Mousepad"] floating enable, focus, move position 70px 70px
+
+assign [class="Lxterminal"] $ws7
+for_window [class="Lxterminal"] floating enable, focus, move position 70px 70px
+
+#================================================================================================================
+#================================================================================================================
+
+# move focused window
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+odiaeresis move right
+
+# switch to workspace
+#bindsym $win+1 workspace $ws1
+#bindsym $win+2 workspace $ws2
+#bindsym $win+3 workspace $ws3
+#bindsym $win+4 workspace $ws4
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
+        bindsym odiaeresis resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape or $mod+r
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+
+# Start XDG autostart .desktop files using dex. See also
+# https://wiki.archlinux.org/index.php/XDG_Autostart
+exec --no-startup-id dex --autostart --environment i3
+
+# xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
+# screen before suspend. Use loginctl lock-session to lock your screen.
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+
+# NetworkManager is the most popular way to manage wireless networks on Linux,
+# and nm-applet is a desktop environment-independent system tray GUI for it.
+#exec --no-startup-id [nmtui]
